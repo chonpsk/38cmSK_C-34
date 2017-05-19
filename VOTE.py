@@ -10,6 +10,13 @@ rakuten = 'http://event.rakuten.co.jp/sanrio/?scid=we_ich_smt_sanrio_webclip_201
 
 tot = 0
 
+def delete(prx):
+    if random.uniform(0, 1) >= 0.4444:
+        try:
+            requests.get('http://127.0.0.1:1025/delete/?proxy={}'.format(prx))
+        except:
+            pass
+
 def vote(prx):
     print (prx + '    ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
     s = requests.Session()
@@ -26,8 +33,7 @@ def vote(prx):
         r = s.post(vote_link, data = payload, headers = hh, timeout = 1)
         requests.get(rakuten, headers = {'User-Agent': 'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.83 Mobile Safari/537.36'}, proxies = {'http': prx}, timeout = 1)
     except:
-        if random.uniform(0, 1) >= 0.4444:
-            requests.get('http://127.0.0.1:1025/delete/?proxy={}'.format(prx))
+        delete(prx)
         return
     print (r.cookies.get_dict())
     print (r.url)

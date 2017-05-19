@@ -20,3 +20,5 @@ VAILD_CHECK_CYCLE = 600
 POOL_LEN_CHECK_CYCLE = 20
 
 TEST_URL = 'https://sanriocharacterranking.com/'
+
+GET_NUMBER = 4444

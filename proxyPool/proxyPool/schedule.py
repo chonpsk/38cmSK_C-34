@@ -85,7 +85,7 @@ class PoolAdder(object):
         else:
             return False
 
-    def add_to_queue(self, flag=4444):
+    def add_to_queue(self, flag = GET_NUMBER):
         """
         命令爬虫抓取一定量未检测的代理，然后检测，将通过检测的代理
         加入到代理池中。

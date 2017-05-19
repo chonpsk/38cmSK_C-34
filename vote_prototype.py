@@ -3,13 +3,32 @@
 import requests
 import time
 import random
+import re
 from bs4 import BeautifulSoup
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
+    (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
+    'Accept-Encoding': 'gzip, deflate, sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8'
+}
 
 view_link = 'https://sanriocharacterranking.com/questionnaire/?cid=showbyrock'
 vote_link = 'https://sanriocharacterranking.com/vote/?cid=showbyrock'
 rakuten = 'http://event.rakuten.co.jp/sanrio/?scid=we_ich_smt_sanrio_webclip_2017_008'
 
 tot = 0
+
+def get_page(url):
+    try:
+        r = requests.get(url, headers = headers)
+    except:
+        raise
+    try:
+        soup = BeautifulSoup(r.content.decode("utf-8"), 'lxml')
+    except UnicodeDecodeError:
+        soup = BeautifulSoup(r.text, 'lxml')
+    return soup
 
 def vote(prx):
     print (prx + '    ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
@@ -39,18 +58,26 @@ def vote(prx):
         tot = tot + 1
     print ('vote ' + str(tot))
 
-
-ip = 'http://www.ip181.com/'
-
-while True:
+def getIP(url):
+    print (url)
     try:
-        soup = BeautifulSoup(requests.get(ip).text, 'lxml')
+        soup = get_page(url)
     except:
-        time.sleep(4)
-        continue
-    proxy_list = soup.find('table').find('tbody')
+        raise
+    for proxy in re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}', soup.get_text('|')):
+        vote(proxy)
+    """
+    proxy_list = soup.find('table', class_ = ['ui', 'table', 'segment']).find('tbody')
     for proxy in proxy_list.find_all('tr'):
         ip = proxy.find_all('td')[0].get_text()
-        if ip.find('.') != -1:
-            port = proxy.find_all('td')[1].get_text()
-            vote(':'.join([ip, port]))
+        port = proxy.find_all('td')[1].get_text()
+        vote(':'.join([ip, port]))
+    """
+
+
+ip = 'http://www.cybersyndrome.net/pla6.html'
+page = requests.get(ip, headers = headers)
+soup = get_page(ip)
+print (soup.prettify())
+print (soup.get_text('|'))
+print (page.content)

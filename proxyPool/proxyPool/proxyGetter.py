@@ -13,8 +13,10 @@
 
 import time
 import requests
+import re
 
 from .utils import get_page
+from .setting import *
 
 class ProxyMetaclass(type):
     """
@@ -41,11 +43,10 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
     添加器会自动识别并调用此类函数。
     """
     
-    def get_raw_proxies(self, callback, count=4444):
+    def get_raw_proxies(self, callback, count = GET_NUMBER):
         proxies = []
         try:
             for proxy in eval("self.{}()".format(callback)):
-                print ('get ' + proxy)
                 proxies.append(proxy)
                 if len(proxies) >= count:
                     break
@@ -117,23 +118,41 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
             ip = item[0].get_text().replace('\r\n', '').replace(' ', '')
             port = item[1].get_text().replace('\r\n', '').replace(' ', '')
             yield ':'.join([ip, port])
-    
-    # def crawl_goubanjia(self):
-    #     start_url = 'http://www.goubanjia.com/free/gngn/index.shtml'
-    #     soup = get_page(start_url)
-    #     proxy_list = soup.find('table', {"class": "table"}).find('tbody')
-    #     for tr in proxy_list.find_all('tr'):
-    #         _proxy = tr.find('td').find_all('span')
-    #         proxy = [i.get_text() for i in _proxy]
-    #         yield ''.join(proxy)
 
 
-if __name__ == '__main__':
-    import time
-    a = FreeProxyGetter()
-    start = time.clock()
-    print(list(a.crawl_goubanjia()))
+    def crawl_ip181(self):
+        start_url = 'http://www.ip181.com'
+        try:
+            soup = get_page(start_url)
+        except:
+            return
+        proxy_list = soup.find('table').find('tbody')
+        for proxy in proxy_list.find_all('tr'):
+            ip = proxy.find_all('td')[0].get_text()
+            if ip.find('.') != -1:
+                port = proxy.find_all('td')[1].get_text()
+                yield ':'.join([ip, port])
 
-    
-    print(time.clock()-start)
-    
+    def crawl_kxdaili(self):
+        start_url = 'http://www.kxdaili.com/ipList/{}.html'
+        urls = [start_url.format(page) for page in range(1, 11)]
+        for url in urls:
+            try:
+                soup = get_page(url)
+            except:
+                return
+            proxy_list = soup.find('table', class_ = ['ui', 'table', 'segment']).find('tbody')
+            for proxy in proxy_list.find_all('tr'):
+                ip = proxy.find_all('td')[0].get_text()
+                port = proxy.find_all('td')[1].get_text()
+                yield ':'.join([ip, port])
+
+    def crawl_89ip(self):
+        start_url = 'http://www.89ip.cn'
+        soup = get_page(start_url)
+        url = 'http://www.89ip.cn/api/?&tqsl=' + soup.find('span', class_ = ['STYLE30']).get_text(strip = True) + '&sxa=&sxb=&tta=&ports=&ktip=&cf=1'
+        try:
+            soup = get_page(url)
+        except:
+            return
+        return re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}', soup.get_text('|'))

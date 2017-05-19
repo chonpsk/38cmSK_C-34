@@ -6,8 +6,8 @@
     Date:          2016/12/9
 -------------------------------------------------
 """
-from proxypool.api import app
-from proxypool.schedule import Schedule
+from proxyPool.api import app
+from proxyPool.schedule import Schedule
 from multiprocessing import Process
 
 def cli():
