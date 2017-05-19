@@ -15,7 +15,7 @@ headers = {
 
 def get_page(url):
     try:
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers, timeout = 9)
     except:
         raise
     try:
