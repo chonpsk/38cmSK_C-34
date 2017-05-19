@@ -64,8 +64,12 @@ def getIP(url):
         soup = get_page(url)
     except:
         raise
-    for proxy in re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}', soup.get_text('|')):
-        vote(proxy)
+    proxy_list = soup.find('table').find('tbody')
+    for proxy in proxy_list.find_all('tr'):
+        ip = proxy.find_all('td')[0].get_text()
+        port = proxy.find_all('td')[1].get_text()
+        print(':'.join([ip, port]))
+
     """
     proxy_list = soup.find('table', class_ = ['ui', 'table', 'segment']).find('tbody')
     for proxy in proxy_list.find_all('tr'):
@@ -75,9 +79,6 @@ def getIP(url):
     """
 
 
-ip = 'http://www.cybersyndrome.net/pla6.html'
-page = requests.get(ip, headers = headers)
-soup = get_page(ip)
-print (soup.prettify())
-print (soup.get_text('|'))
-print (page.content)
+start_url = 'https://free-proxy-list.net'
+soup = get_page(start_url)
+getIP(start_url)

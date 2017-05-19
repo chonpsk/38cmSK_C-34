@@ -156,3 +156,49 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
         except:
             return
         return re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}', soup.get_text('|'))
+
+    def crawl_goubanjia(self):
+        start_url = 'http://www.goubanjia.com/index{}.shtml'
+        urls = [start_url.format(page) for page in range(1, 11)]
+        for url in urls:
+            try:
+                soup = get_page(url)
+            except:
+                return
+            proxy_list = soup.find('table', {"class": "table"}).find('tbody')
+            for tr in proxy_list.find_all('tr'):
+                _proxy = tr.find('td').find_all(['span', 'div'])
+                proxy = [i.get_text() for i in _proxy]
+                proxy = proxy[:-1]
+                proxy.append(':')
+                proxy.append(tr.find('td').find('span', class_ = ['port']).get_text())
+                yield ''.join(proxy)
+
+    def crawl_coobobo(self):
+        start_url = 'http://www.coobobo.com/free-http-proxy/{}'
+        urls = [start_url.format(page) for page in range(1, 11)]
+        for url in urls:
+            try:
+                soup = get_page(url)
+            except:
+                return
+            proxy_list = soup.find('table', {"class": "table"}).find('tbody')
+            for tr in proxy_list.find_all('tr'):
+                proxy = re.findall(r'"\S+"|\'\S+\'', tr.find_all('td')[0].get_text())
+                proxy = [s[1:-1] for s in proxy]
+                proxy.append(':')
+                proxy.append(tr.find_all('td')[1].get_text())
+                yield ''.join(proxy)
+
+    def crawl_free_proxy_list(self):
+        start_url = 'https://free-proxy-list.net'
+        try:
+            soup = get_page(start_url)
+        except:
+            return
+        proxy_list = soup.find('table').find('tbody')
+        for proxy in proxy_list.find_all('tr'):
+            ip = proxy.find_all('td')[0].get_text()
+            port = proxy.find_all('td')[1].get_text()
+            yield ':'.join([ip, port])
+
