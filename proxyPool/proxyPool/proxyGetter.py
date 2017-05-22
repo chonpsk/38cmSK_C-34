@@ -60,6 +60,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
         抓取快代理网的数据
         """
         start_url = 'http://www.kuaidaili.com/proxylist/{}/'
+        print (start_url)
         urls = [start_url.format(page) for page in range(1, page_count + 1)]
         for url in urls:
             try:
@@ -74,29 +75,12 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
                 yield ':'.join([ip, port])
 
 
-    def crawl_daili66(self, page_count=4):
-        """
-        抓取代理66网的数据。
-        """
-        start_url = 'http://www.66ip.cn/{}.html'
-        urls = [start_url.format(page) for page in range(1, page_count + 1)]
-        for url in urls:
-            try:
-                soup = get_page(url) 
-            except:
-                continue
-            time.sleep(1)
-            proxy_list = soup.find('table', {"border": "2px"}) 
-            for proxy in proxy_list.find_all('tr')[1:]:
-                ip = proxy.find_all('td')[0].get_text()
-                port = proxy.find_all('td')[1].get_text()
-                yield ':'.join([ip, port])
-
     def crawl_xici(self):
         """
         抓取xici代理网的数据。
         """
         start_url = 'http://api.xicidaili.com/free2016.txt'
+        print (start_url)
         try:
             soup = get_page(start_url)
         except:
@@ -109,6 +93,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
         抓取proxy360网的数据。
         """
         start_url = 'http://www.proxy360.cn/default.aspx'
+        print (start_url)
         try:
             soup = get_page(start_url)
         except:
@@ -122,6 +107,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
 
     def crawl_ip181(self):
         start_url = 'http://www.ip181.com'
+        print (start_url)
         try:
             soup = get_page(start_url)
         except:
@@ -135,6 +121,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
 
     def crawl_kxdaili(self):
         start_url = 'http://www.kxdaili.com/ipList/{}.html'
+        print (start_url)
         urls = [start_url.format(page) for page in range(1, 11)]
         for url in urls:
             try:
@@ -149,6 +136,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
 
     def crawl_89ip(self):
         start_url = 'http://www.89ip.cn'
+        print (start_url)
         soup = get_page(start_url)
         url = 'http://www.89ip.cn/api/?&tqsl=' + soup.find('span', class_ = ['STYLE30']).get_text(strip = True) + '&sxa=&sxb=&tta=&ports=&ktip=&cf=1'
         try:
@@ -159,6 +147,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
 
     def crawl_goubanjia(self):
         start_url = 'http://www.goubanjia.com/index{}.shtml'
+        print (start_url)
         urls = [start_url.format(page) for page in range(1, 11)]
         for url in urls:
             try:
@@ -176,6 +165,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
 
     def crawl_coobobo(self):
         start_url = 'http://www.coobobo.com/free-http-proxy/{}'
+        print (start_url)
         urls = [start_url.format(page) for page in range(1, 11)]
         for url in urls:
             try:
@@ -192,6 +182,7 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
 
     def crawl_free_proxy_list(self):
         start_url = 'https://free-proxy-list.net'
+        print (start_url)
         try:
             soup = get_page(start_url)
         except:
@@ -201,4 +192,15 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
             ip = proxy.find_all('td')[0].get_text()
             port = proxy.find_all('td')[1].get_text()
             yield ':'.join([ip, port])
+
+    def crawl_66ip(self):
+        start_url = 'http://www.66ip.cn/pt.html'
+        print (start_url)
+        soup = get_page(start_url)
+        url = 'http://www.66ip.cn/mo.php?sxb=&tqsl=' + [text for text in soup.find('table',  border = '0').find('span').stripped_strings][1] + '&port=&export=&ktip=&sxa=&submit=%CC%E1++%C8%A1'
+        try:
+            soup = get_page(url)
+        except:
+            return
+        return re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}', soup.get_text('|'))
 

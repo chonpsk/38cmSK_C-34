@@ -21,4 +21,4 @@ POOL_LEN_CHECK_CYCLE = 20
 
 TEST_URL = 'https://sanriocharacterranking.com/'
 
-GET_NUMBER = 4444
+GET_NUMBER = 444404

@@ -79,6 +79,12 @@ def getIP(url):
     """
 
 
-start_url = 'https://free-proxy-list.net'
+start_url = 'http://www.66ip.cn/pt.html'
+#start_url = 'http://www.66ip.cn/mo.php?sxb=&tqsl=6805&port=&export=&ktip=&sxa=&submit=%CC%E1++%C8%A1'
 soup = get_page(start_url)
-getIP(start_url)
+#print ([text for text in soup.find('table', border = '0').find('span').stripped_strings])
+url = 'http://www.66ip.cn/mo.php?sxb=&tqsl=' + [text for text in soup.find('table',  border = '0').find('span').stripped_strings][1] + '&port=&export=&ktip=&sxa=&submit=%CC%E1++%C8%A1'
+print (url)
+soup =  get_page(url)
+print (re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}', soup.get_text('|')))
+#getIP(start_url)
