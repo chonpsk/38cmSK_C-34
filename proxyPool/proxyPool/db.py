@@ -63,7 +63,7 @@ class RedisClient(object):
         """弹出一个可用代理。
         """
         try:
-            return self.__db.blpop("proxies", 30)[1].decode('utf-8')
+            return self.__db.blpop("proxies", 30)[0].decode('utf-8')
         except:
             raise PoolEmptyError
 
