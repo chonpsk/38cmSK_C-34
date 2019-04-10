@@ -3,7 +3,7 @@ import os
 import sys
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parentdir)
-from proxypool.schedule import VaildityTester
+from proxyPool.schedule import VaildityTester
 
 
 class SchduleTestCase(unittest.TestCase):

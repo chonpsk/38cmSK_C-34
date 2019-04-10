@@ -3,8 +3,8 @@ import os
 import sys
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parentdir)
-from proxypool.db import RedisClient
-from proxypool.api import app
+from proxyPool.db import RedisClient
+from proxyPool.api import app
 
 
 class ApiTestCase(unittest.TestCase):

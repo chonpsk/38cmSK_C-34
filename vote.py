@@ -6,32 +6,41 @@ import random
 
 view_link = 'https://sanriocharacterranking.com/questionnaire/?cid=showbyrock'
 vote_link = 'https://sanriocharacterranking.com/vote/?cid=showbyrock'
-rakuten = 'http://event.rakuten.co.jp/sanrio/?scid=we_ich_smt_sanrio_webclip_2017_008'
+rakuten = 'https://event.rakuten.co.jp/sanrio/?scid=we_ich_smt_sanrio_webclip_2019_009'
+
+sp_headers = {'User-Agent': 'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Mobile Safari/537.36'}
+
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+
+timeout = 4
 
 tot = 0
 
 def delete(prx):
-    if random.uniform(0, 1) >= 0.4444:
+    """
+    if random.uniform(0,,1) >= 0.4444:
         try:
             requests.get('http://127.0.0.1:1025/delete/?proxy={}'.format(prx))
         except:
             pass
+    """
+    try:
+        requests.get('http://127.0.0.1:1025/delete/?proxy={}'.format(prx))
+    except:
+        pass
+    
 
 def vote(prx):
     print (prx + '    ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
-    s = requests.Session()
-    s.proxies = {'http': prx}
-    payload = {'age': random.randint(20, 29),
-               'gender_id': random.randint(1, 2),
-               'pref_id': random.randint(1, 47),
-               'agreement': 'on'}
-    hh = {'Referer': view_link,
-          'Origin': 'https://sanriocharacterranking.com',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
+    sess = requests.Session()
+    sess.proxies = {'http': prx}
     try:
-        r = s.post(vote_link, data = payload, headers = hh, timeout = 1)
-        requests.get(rakuten, headers = {'User-Agent': 'Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.83 Mobile Safari/537.36'}, proxies = {'http': prx}, timeout = 1)
+        requests.get(rakuten, headers = sp_headers, proxies = {'http': prx}, timeout = timeout)
+    except:
+        return
+    """
+    try:
+        r = s.post(vote_link, data = payload, headers = hh, timeout = timeout)
     except:
         delete(prx)
         return
@@ -40,11 +49,14 @@ def vote(prx):
     if r.url.find('vote', 0) != -1:
         global tot
         tot = tot + 1
+    """
+    global tot
+    tot += 1
     print ('vote ' + str(tot))
-
+    time.sleep(random.randint(1,4))
 
 while True:
     try:
-        vote(requests.get('http://127.0.0.1:1025/get/').text)
+        vote(requests.get('http://127.0.0.1:3969/get/').text)
     except:
         time.sleep(4)

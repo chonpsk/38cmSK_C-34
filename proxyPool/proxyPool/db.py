@@ -13,6 +13,10 @@ import random
 from .error import PoolEmptyError
 from .setting import HOST, PORT
 
+import datetime
+
+def get_date():
+    return (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).day
 
 class RedisClient(object):
     """
@@ -29,7 +33,7 @@ class RedisClient(object):
         return proxies
 
     def remove(self, proxy):
-        self.__db.srem("proxy_set", proxy)
+        # self.__db.srem("proxy_set", proxy)
         self.__db.lrem("proxies", proxy, 0)
 
     def put(self, proxy):
@@ -38,7 +42,7 @@ class RedisClient(object):
         就将其放入proxy pool中，否则不压入。
         """
 
-        if self.__db.sadd("proxy_set", proxy):
+        if self.__db.sadd("proxy_set", proxy + '_' + str(get_date())):
             self.__db.rpush("proxies", proxy)
         else:
             pass

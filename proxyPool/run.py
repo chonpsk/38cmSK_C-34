@@ -13,7 +13,7 @@ from multiprocessing import Process
 def cli():
     s = Schedule()
     s.run()
-    app.run(port = 1025)
+    app.run(port = 3969)
 
 if __name__ == '__main__':
     cli()

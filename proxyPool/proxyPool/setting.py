@@ -19,6 +19,6 @@ POOL_UPPER_THRESHOLD = 44444444
 VAILD_CHECK_CYCLE = 600
 POOL_LEN_CHECK_CYCLE = 20
 
-TEST_URL = 'https://sanriocharacterranking.com/'
+TEST_URL = 'https://event.rakuten.co.jp'
 
 GET_NUMBER = 444404
