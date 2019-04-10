@@ -4,6 +4,8 @@ import requests
 import time
 import random
 
+db_path = 'http://127.0.0.1:3969'
+
 view_link = 'https://ranking.sanrio.co.jp/'
 vote_link = 'https://ranking.sanrio.co.jp/api/?act=api_vote'
 rakuten = 'https://event.rakuten.co.jp/sanrio/?scid=we_ich_smt_sanrio_webclip_2019_009'
@@ -25,7 +27,7 @@ def delete(prx):
             pass
     """
     try:
-        requests.get('http://127.0.0.1:3969/delete/?proxy={}'.format(prx))
+        requests.get(db_path + '/delete/?proxy={}'.format(prx))
     except:
         pass
     
@@ -66,6 +68,6 @@ def vote(prx):
 
 while True:
     try:
-        vote(requests.get('http://127.0.0.1:3969/get/').text)
+        vote(requests.get(db_path + '/get/').text)
     except:
         time.sleep(4)

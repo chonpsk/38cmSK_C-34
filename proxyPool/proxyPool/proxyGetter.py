@@ -59,20 +59,23 @@ class FreeProxyGetter(object, metaclass=ProxyMetaclass):
         """
         抓取快代理网的数据
         """
-        start_url = 'http://www.kuaidaili.com/proxylist/{}/'
+        start_url = 'https://www.kuaidaili.com/free/inha/{}/'
         print (start_url)
-        urls = [start_url.format(page) for page in range(1, page_count + 1)]
+        urls = [start_url.format(page) for page in range(1, 5)]
+        start_url = 'https://www.kuaidaili.com/free/intr/{}/'
+        urls.extend([start_url.format(page) for page in range(1, 5)])
         for url in urls:
             try:
                 soup = get_page(url) 
             except:
                 continue
       
-            proxy_list = soup.find('div', {'id': 'index_free_list'}).find('tbody')
+            proxy_list = soup.find('table', {'class': 'table table-bordered table-striped'}).tbody
             for proxy in proxy_list.find_all('tr'):
                 ip = proxy.find_all('td')[0].get_text()
                 port = proxy.find_all('td')[1].get_text()
                 yield ':'.join([ip, port])
+            time.sleep(1)
 
 
     def crawl_xici(self):

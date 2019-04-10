@@ -34,7 +34,7 @@ class RedisClient(object):
 
     def remove(self, proxy):
         # self.__db.srem("proxy_set", proxy)
-        self.__db.lrem("proxies", proxy, 0)
+        self.__db.lrem("proxies", 0, proxy)
 
     def put(self, proxy):
         """将代理压入Pool中。
